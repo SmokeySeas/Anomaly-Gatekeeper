@@ -1,0 +1,99 @@
+# scanner_rules.yaml
+# Defines different scanning blocks (patterns) for param-space-scanner.py
+# to systematically search for anomaly-free models.
+#
+# Note: This file should contain a single YAML document.
+# Comments starting with '---' should be avoided unless they are actual YAML document separators,
+# which is not intended here.
+
+# Optional: Global settings (could define defaults or settings applicable to all blocks)
+# global_settings:
+#   default_output_root: "results/default_scans/"
+#   default_base_spectrum_function: "standard_model_spectrum_no_nuR"
+
+rule_sets:
+
+  # Block A: SM + One New Fermion (as per Charlie's refined spec)
+  - name: "SM_Plus_One_Fermion_BlockA_Strict"
+    description: "Adds one new trial fermion to the Standard Model (one generation). Parameters follow Charlie's strict Block A specification."
+    base_spectrum_function: "standard_model_spectrum_no_nuR" # Changed key name
+    output_dir: "results/block_a/" # Optional per-block output
+    new_fermions_to_add: 1
+    fermion_definitions:
+      - id: "F_new"
+        # Charlie's Block A specific SU(N) iteration was: [(1,1),(1,2),(1,3), (3,1),(3,2), (6,1),(8,1)]
+        # This YAML structure might need the scanner to have a way to interpret such specific joint suN_rep iterations,
+        # or this block would be simplified here and scanner logic handles the specific product.
+        # For this example, showing individual scans:
+        su3_rep_scan: { type: "list", values: [1, 3, 6, 8] } # Scanner would combine these with su2_rep_scan
+        su2_rep_scan: { type: "list", values: [1, 2, 3] } # Actual pairs would be filtered by scanner logic for Block A if needed.
+        hypercharge_scan:
+          type: "k_over_n" # Changed structure
+          k_min: -6
+          k_max: 6
+          n: 6
+          abs_max: 1.0 # Optional filter for |Y| <= 1.0
+        chirality_scan: { type: "list", values: [-1, 1] }
+        generations_scan: { type: "list", values: [1] }
+
+  # Block B: SM + Vector-Like Pair
+  - name: "SM_Plus_VectorLike_Pair_BlockB"
+    description: "Adds one new vector-like pair (F_L, F_R) to the Standard Model."
+    base_spectrum_function: "standard_model_spectrum_no_nuR" # Changed key name
+    output_dir: "results/block_b/" # Optional
+    new_fermions_to_add: 2
+    fermion_definitions:
+      - id: "F_L"
+        su3_rep_scan: { type: "list", values: [1, 3] }
+        su2_rep_scan: { type: "list", values: [1, 2] }
+        hypercharge_scan:
+          type: "list_from_grid_file"
+          file: "configs/dark_sector_integer_hypercharges.yaml"
+          grid_name: "Integer_Y_for_VectorLike_Pairs"
+          # Example fallback or alternative:
+          # values: ["-1/2", "1/6", "0", "1"]
+        chirality_scan: { type: "list", values: [1] } # F_L is L-handed
+        generations_scan: { type: "list", values: [1] }
+      - id: "F_R"
+        su3_rep: { copy_from: F_L.su3_rep } # Changed link syntax
+        su2_rep: { copy_from: F_L.su2_rep } # Changed link syntax
+        hypercharge: { copy_from: F_L.hypercharge } # Changed link syntax & explicit copy for Y
+        chirality: { copy_from: F_L.chirality, invert: true } # Changed link syntax
+        generations: { copy_from: F_L.generations } # Changed link syntax
+
+  # Block C: SM + Higgsino-Like Pair
+  - name: "SM_Plus_Higgsino_Pair_BlockC"
+    description: "Adds two SU(2)L chiral doublets (both L-handed) with Y and -Y to SM."
+    base_spectrum_function: "standard_model_spectrum_no_nuR" # Changed key name
+    output_dir: "results/block_c/" # Optional
+    new_fermions_to_add: 2
+    fermion_definitions:
+      - id: "H1_L"
+        su3_rep_scan: { type: "list", values: [1] }
+        su2_rep_scan: { type: "list", values: [2] }
+        hypercharge_scan: { type: "list", values: ["1/2", "1", "3/2"] } # Charlie's specific Y list for H1
+        chirality_scan: { type: "list", values: [1] }
+        generations_scan: { type: "list", values: [1] }
+      - id: "H2_L"
+        su3_rep: { copy_from: H1_L.su3_rep } # Changed link syntax
+        su2_rep: { copy_from: H1_L.su2_rep } # Changed link syntax
+        hypercharge: { copy_from: H1_L.hypercharge, negate: true } # Changed link syntax + negate
+        chirality: { copy_from: H1_L.chirality } # Changed link syntax (same chirality)
+        generations: { copy_from: H1_L.generations } # Changed link syntax
+
+  # Example: Using a Specific Grid from your Dark Sector File
+  - name: "SM_Plus_DarkSector_Neutral_Singlets"
+    description: "Adds one new fermion to SM, taking Y from Strictly_Neutral_Singlets_Y0 grid."
+    base_spectrum_file: "configs/standard_model_no_nuR.json" # Example using file, changed key name
+    output_dir: "results/dark_sector_singlets/" # Optional
+    new_fermions_to_add: 1
+    fermion_definitions:
+      - id: "F_dark"
+        su3_rep_scan: { type: "list", values: [1] }
+        su2_rep_scan: { type: "list", values: [1] }
+        hypercharge_scan:
+          type: "list_from_grid_file"
+          file: "configs/dark_sector_integer_hypercharges.yaml"
+          grid_name: "Strictly_Neutral_Singlets_Y0" # Uses the 'values' from this grid
+        chirality_scan: { type: "list", values: [-1, 1] }
+        generations_scan: { type: "list", values: [1] }

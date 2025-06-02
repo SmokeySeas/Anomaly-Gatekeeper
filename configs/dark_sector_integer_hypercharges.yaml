@@ -1,0 +1,54 @@
+# Dark Sector Integer Hypercharge Grids
+# File: configs/dark_sector_integer_hypercharges.yaml
+#
+# Purpose: To provide specific integer hypercharge values for scanning potential
+#          dark sector candidates or particles with integer U(1)_Y charges.
+#          These grids are intended for use with a scanner that can iterate
+#          through these specific hypercharge lists for new trial fermions
+#          when exploring dark sector models.
+
+grids:
+  - name: "Strictly_Neutral_Singlets_Y0"
+    description: "True SM‑neutral (Y=0)."
+    values: ["0"] # Value as string
+    # 'denominator' field is omitted as this is an explicit list of integers.
+    motivation: |
+      Right‑handed neutrino, scalar singlet DM, …
+    scan_context: | # For documentation
+      Typically scanned as single fermion additions (like Block A) or as components of vector-like pairs where Y=0.
+      For single additions, only Y=0 is typically anomaly-free unless the particle
+      is a complete singlet under SU(3)c and SU(2)L.
+
+  - name: "Integer_Y_for_VectorLike_Pairs"
+    description: "Integer hypercharges for constructing vector-like pairs (X_L(Y), X_R(Y))."
+    # The scanner should iterate Y from this list and, for each Y,
+    # create a pair: X_L(Y, chirality=+1) and X_R(Y, chirality=-1)
+    # with the same SU(3)c and SU(2)L representations.
+    values: ["1", "-1", "2", "-2", "3", "-3"] # Values as strings
+    # 'denominator' field is omitted.
+    motivation: |
+      - Vector-like fermions charged under U(1)_Y (integer implies no fractional electric charge if T3L=0).
+      - Can gain mass without SSB of U(1)_Y if Y=0, or via a dark Higgs if Y!=0.
+      - Potential dark matter components or mediators if Y allows for appropriate interactions/stability.
+      - Example: A vector-like pair of SU(3)c and SU(2)L singlets with Y=1.
+    scan_context: | # For documentation
+      Intended for scans that add vector-like pairs (similar to Block B).
+      The scanner uses each listed 'Y' value for both L and R components of the pair.
+
+  - name: "Integer_Y_for_Chiral_Pairs_Opposite_Y" # Name slightly adjusted for clarity
+    description: "Integer hypercharges for adding chiral pairs like F1_L(Y) and F2_L(-Y)."
+    # The scanner should iterate Y_f1 from this list for the first fermion (F1_L),
+    # and the second fermion (F2_L) will have hypercharge -Y_f1.
+    # Both typically have chirality=+1.
+    values: ["1", "-1", "2", "-2", "3", "-3"] # Formerly 'magnitudes', now 'values' and pre-expanded. Values as strings.
+    # 'denominator' field is omitted.
+    motivation: |
+      - Sets of new chiral fermions where U(1)_Y anomalies cancel between them
+        (e.g., for a pair, Y1 + Y2 = 0 and Y1^3 + Y2^3 = 0, which for two particles implies Y1 = -Y2).
+      - Could arise from a broken dark U(1)' symmetry that kinetically mixes with U(1)_Y.
+      - Integer hypercharges might imply specific B-L quantum numbers if Y relates to B-L and T3R=0.
+    scan_context: | # For documentation
+      Suitable for scans adding pairs of new chiral fermions (similar to Block C).
+      The scanner picks a hypercharge Y_f1 from the 'values' list for the first fermion,
+      and the second fermion in the pair gets -Y_f1. This generates pairs like
+      (+1, -1), (-1, +1), (+2, -2), etc., covering all unique pairs.

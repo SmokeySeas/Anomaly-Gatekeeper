@@ -1,0 +1,107 @@
+{
+  "description": "Left-Right symmetric model with parity - searching for consistent SU(3)_C × SU(2)_L × SU(2)_R × U(1)_{B-L} embeddings",
+  "base_spectrum": [
+    {
+      "name": "Q_L",
+      "su3_rep": 3,
+      "su2_rep": 2,
+      "hypercharge": "1/6",
+      "chirality": 1,
+      "generations": 1,
+      "comment": "Left-handed quark doublet"
+    },
+    {
+      "name": "u_R",
+      "su3_rep": 3,
+      "su2_rep": 1,
+      "hypercharge": "2/3",
+      "chirality": -1,
+      "generations": 1,
+      "comment": "Right-handed up quark"
+    },
+    {
+      "name": "d_R",
+      "su3_rep": 3,
+      "su2_rep": 1,
+      "hypercharge": "-1/3",
+      "chirality": -1,
+      "generations": 1,
+      "comment": "Right-handed down quark"
+    },
+    {
+      "name": "L_L",
+      "su3_rep": 1,
+      "su2_rep": 2,
+      "hypercharge": "-1/2",
+      "chirality": 1,
+      "generations": 1,
+      "comment": "Left-handed lepton doublet"
+    },
+    {
+      "name": "e_R",
+      "su3_rep": 1,
+      "su2_rep": 1,
+      "hypercharge": "-1",
+      "chirality": -1,
+      "generations": 1,
+      "comment": "Right-handed electron"
+    }
+  ],
+  "scan_config": {
+    "hypercharge": {
+      "include_standard": true,
+      "range": [-1, 1],
+      "denominators": [1, 2, 3, 6],
+      "comment": "Searching for B-L charges compatible with Y = T3_R + (B-L)/2"
+    },
+    "su3_rep": {
+      "values": [1, 3]
+    },
+    "su2_rep": {
+      "values": [1, 2],
+      "comment": "In L-R models, we need to consider both SU(2)_L and effective SU(2)_R"
+    },
+    "special_searches": {
+      "right_handed_doublets": {
+        "description": "Search for right-handed doublets that could form under SU(2)_R",
+        "targets": [
+          {
+            "name": "Q_R candidate",
+            "base": "u_R + d_R combination",
+            "expected_quantum_numbers": "(3, 1→2, ?)"
+          },
+          {
+            "name": "L_R candidate", 
+            "base": "ν_R + e_R combination",
+            "expected_quantum_numbers": "(1, 1→2, ?)"
+          }
+        ]
+      }
+    }
+  },
+  "physics_targets": {
+    "right_quark_doublet": {
+      "description": "Right-handed quark doublet under SU(2)_R",
+      "components": ["u_R", "d_R"],
+      "parity_partner_of": "Q_L",
+      "b_minus_l": "1/3"
+    },
+    "right_lepton_doublet": {
+      "description": "Right-handed lepton doublet under SU(2)_R",
+      "components": ["ν_R", "e_R"],
+      "parity_partner_of": "L_L",
+      "b_minus_l": "-1"
+    },
+    "bidoublet_higgs": {
+      "description": "Higgs bidoublet (2,2) under SU(2)_L × SU(2)_R",
+      "expected": "(1, 2)_? ⊗ (1, 2)_?",
+      "role": "Gives masses to all fermions while preserving L-R symmetry at high scale"
+    }
+  },
+  "notes": [
+    "In left-right symmetric models, hypercharge decomposes as Y = T3_R + (B-L)/2",
+    "Right-handed fermions form doublets under SU(2)_R",
+    "Parity exchanges L ↔ R, so quantum numbers must allow this symmetry",
+    "Anomaly cancellation must work for both SU(2)_L and SU(2)_R separately"
+  ]
+}

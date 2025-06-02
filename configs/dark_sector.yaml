@@ -1,0 +1,111 @@
+# dark_sector_integer_hypercharges.yaml
+# Dark Sector Search Rules for Anomaly-Free Models
+# Focus: Integer electric charges suitable for dark matter candidates
+
+rule_sets:
+  - name: "minimal_dark_matter"
+    description: "Search for minimal dark matter candidates with integer charges"
+    base_spectrum: "standard_model"
+    blocks: ["A", "B"]  # Single fermions and vector-like pairs
+    constraints:
+      hypercharge:
+        type: "integer"
+        range: [0, 3]
+        exclude: []  # Q=0 allowed for neutral dark matter
+      su3_rep:
+        values: [1]  # Color singlets only for dark matter stability
+      su2_rep:
+        values: [1]  # SU(2) singlets for simplicity
+    physics_motivated_sets:
+      - name: "sterile_dark_fermion"
+        description: "Completely neutral dark matter candidate"
+        fermions:
+          - name: "chi_0"
+            su3_rep: 1
+            su2_rep: 1
+            hypercharge: 0
+            chirality: 1
+            
+  - name: "dark_sector_multiplets"
+    description: "Dark sector with non-trivial SU(2) structure"
+    base_spectrum: "standard_model"
+    blocks: ["A", "B", "C"]
+    constraints:
+      hypercharge:
+        type: "integer"
+        range: [-2, 2]
+      su3_rep:
+        values: [1]  # No color for dark sector
+      su2_rep:
+        values: [1, 2, 3]  # Allow higher SU(2) representations
+    symmetry_requirements:
+      - type: "discrete"
+        constraints:
+          dark_parity: "odd"
+          stabilizing_symmetry: "Z2"
+    physics_motivated_sets:
+      - name: "inert_doublet"
+        description: "Inert Higgs doublet model dark matter"
+        fermions:
+          - name: "H_dark"
+            su3_rep: 1
+            su2_rep: 2
+            hypercharge: 1  # Y=1/2 → integer 1 in our convention
+            chirality: 1
+            
+  - name: "dark_QCD_sector"
+    description: "Dark sector with QCD-like structure"
+    base_spectrum: "standard_model" 
+    blocks: ["B"]  # Vector-like only for QCD-like theories
+    constraints:
+      hypercharge:
+        type: "integer"
+        range: [0, 2]
+      su3_rep:
+        values: [1, 8]  # Allow octets for glueball-like states
+      su2_rep:
+        values: [1]
+    metadata:
+      motivation: "Hidden QCD sector with integer charges"
+      references: ["arXiv:1234.5678", "arXiv:2345.6789"]
+      
+  - name: "millicharged_dark_matter"
+    description: "Dark matter with fractional but small electric charge"
+    base_spectrum: "standard_model"
+    blocks: ["A", "B"]
+    constraints:
+      hypercharge:
+        type: "rational"
+        range: [0, 1]
+        denominators: [10, 100, 1000]  # Millicharges
+        exclude: [1]  # Exclude unit charge
+      su3_rep:
+        values: [1]
+      su2_rep:
+        values: [1]
+    metadata:
+      experimental_constraints: "MilliQan, SLAC millicharge"
+      
+  - name: "asymmetric_dark_matter"
+    description: "Asymmetric dark matter with baryon-like quantum number"
+    base_spectrum: "standard_model"
+    blocks: ["A", "C"]  # Single additions and chiral pairs
+    constraints:
+      hypercharge:
+        type: "integer"
+        range: [-1, 1]
+      su3_rep:
+        values: [1]
+      su2_rep:
+        values: [1, 2]
+    physics_motivated_sets:
+      - name: "dark_baryon"
+        fermions:
+          - name: "B_dark"
+            su3_rep: 1
+            su2_rep: 1
+            hypercharge: 0
+            chirality: 1
+            metadata:
+              dark_baryon_number: 1
+              mass_scale: "GeV"

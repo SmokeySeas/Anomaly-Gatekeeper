@@ -1,0 +1,18 @@
+[
+  {
+    "name": "L'_L_vectorlike",
+    "su3_rep": 1,
+    "su2_rep": 2,
+    "hypercharge": "-1/2",
+    "chirality": 1,
+    "generations": 1
+  },
+  {
+    "name": "L'_R_vectorlike",
+    "su3_rep": 1,
+    "su2_rep": 2,
+    "hypercharge": "-1/2",
+    "chirality": -1,
+    "generations": 1
+  }
+]
