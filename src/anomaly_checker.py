@@ -5,7 +5,7 @@ Anomaly Cancellation Verification System
 A comprehensive framework for checking gauge and gravitational anomalies
 in particle physics models, starting with the Standard Model.
 
-Authors: Bryan Roy (lead), Claude (implementation), ChatGPT (architect), Gemini (validation)
+Authors: Bryan Roy (lead), Claude (implementation), ChatGPT (a.k.a Charlie) (architect), Gemini (validation)
 Version: 1.0
 """
 
